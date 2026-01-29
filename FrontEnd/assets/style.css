@@ -334,7 +334,7 @@ li:hover {
 }
 /* Section Modale Ajout photos */
 
-.modale form{
+.modale form {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -343,7 +343,7 @@ li:hover {
   height: 80%;
 }
 
-.form-ajout{
+.form-ajout {
   justify-self: center;
   display: flex;
   flex-direction: column;
@@ -351,39 +351,39 @@ li:hover {
   align-items: center;
   width: 100%;
   height: 30%;
-  background-color: #E8F1F6 ;
+  background-color: #e8f1f6;
 }
 
-.fa-solid.fa-arrow-left{
+.fa-solid.fa-arrow-left {
   position: absolute;
   top: 3%;
   left: 5%;
   display: block;
-  color:black;
+  color: black;
   font-size: 20px;
 }
 
-.fa-regular.fa-image{
+.fa-regular.fa-image {
   display: block;
   width: 100%;
   align-self: flex-start;
-  color: #B9C5CC;
+  color: #b9c5cc;
   font-size: 60px;
 }
 
-.form-ajout button{
-  background-color:#CBD6DC ;
+.form-ajout button {
+  background-color: #cbd6dc;
   width: 40%;
   margin-bottom: 8px;
   font-size: 14px;
   color: #306685;
 }
 
-.form-ajout p{
+.form-ajout p {
   font-size: 8px;
   color: grey;
 }
-.form-formulaire{
+.form-formulaire {
   height: 40%;
   width: 100%;
   border-bottom: solid 1px rgba(179, 179, 179, 1);
@@ -396,7 +396,7 @@ li:hover {
 .form-formulaire label {
   font-family: "Work Sans";
   font-weight: 500;
-  color: #3D3D3D;
+  color: #3d3d3d;
   font-size: 14px;
   align-self: flex-start;
   margin: 30px 0 10px 0;
@@ -416,12 +416,10 @@ li:hover {
 
 .modale form .modale-form_button {
   background-color: rgba(167, 167, 167, 1);
-  color: white;
+  color: blue;
   font-family: "Syne";
   font-size: 12px;
 }
-
-
 
 /* Fin Section Modale Ajout photos */
 /* Fin Section Modale */
