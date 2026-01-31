@@ -29,7 +29,7 @@ function login() {
           localStorage.setItem("token", data.token);
           window.location.href = "index.html";
         } else {
-          title.innerHTML = `<h2>Log In</h2><p>Votre mail ou mot de passe est incorrect</p>`;
+          title.innerHTML = `<h2>Log In</h2><p>Erreur dans l'identifiant ou le mot de passe</p>`;
         }
       });
     //   .catch((erreur) => console.log(erreur));

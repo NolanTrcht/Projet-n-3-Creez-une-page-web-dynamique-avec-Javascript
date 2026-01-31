@@ -1,5 +1,6 @@
 const portfolioFiltres = document.getElementById("portfolio-filtres");
 const galerie = document.querySelector(".gallery");
+const divGallerie = document.createElement("div");
 
 // Récupère les datas de l'API //
 async function dataTri() {
@@ -51,10 +52,11 @@ function afficherGallerie(tableau) {
 
   // Pour chaque tableau transmis en paramètres, affiche moi ceci//
   tableau.forEach((item) => {
-    galerie.innerHTML += `<div>
+    galerie.innerHTML += `
+        <li data-id="${item.id}">
             <img src=${item.imageUrl} alt=${item.title}></img>
             <figcaption>${item.title}</figcaption>
-          </div>`;
+        </li>`;
   });
 }
 //Mis en place du tri Fonctionnelle //
@@ -111,7 +113,7 @@ function loginActif() {
   iconeProjets.classList.add("fa-solid", "fa-pen-to-square");
   divHead.classList.add("header-admin");
   spanBtn.textContent = "modifier";
-
+  btnProjets.classList.add(".button-modifier")
   // Rattacher les enfants aux parents//
   divHead.appendChild(icone);
   divHead.appendChild(spanHead);
@@ -138,76 +140,117 @@ function loginActif() {
 }
 
 async function modale() {
+  // Récupère ma data de l'API //
   const data = await dataTri();
-  const divGallerie = document.createElement("div")
+
+  // Ecoute du bouton modifier pour afficher la modale //
   const btnProjets = document.querySelector("button");
+  btnProjets.addEventListener("click", (e) => {
+    affichageGallerieModale(data)
+  })
+ 
+   // Ecoute ma gallerie modale, si elle contient ces éléments alors elle affiche modale/Ajout photo//
+    divGallerie.addEventListener("click", (e) => {
+      console.log(e.target)
+      const cible = e.target.classList
+      
+      if (cible.contains("overlay")) {
+        divGallerie.innerHTML = "";
+      }  
+      if (cible.contains("fa-xmark")) {
+        divGallerie.innerHTML = "";
+      }   
+      if(cible.contains("fa-arrow-left")){
+          affichageGallerieModale(data)
+      }
+      if(cible.contains("modale-button")){
+        affichageModaleAjoutPhoto()
+      }
+      if(cible.contains("fa-trash-can")){
+
+        // Supprime les travaux de la modale et de la galerie //
+        const li = e.target.closest(".modale-photos_all")
+        const id = e.target.dataset.id
+        li.remove(id)
+        
+        const galerieItem = document.querySelector(`.gallery li[data-id="${id}"]`)
+        galerieItem.remove()
+      }
+    });
+    
+        affichageModaleAjoutPhoto()
+    
+      }
+    
+    // -----------------------------------  //
+
+
+      
+
+
+
+function affichageModaleAjoutPhoto(){
+      divGallerie.innerHTML = `
+      <div class='overlay'>
+        <div class='modale'>
+            <i class="fa-solid fa-arrow-left"></i>
+            <i class="fa-solid fa-xmark"></i>
+            <h2>Ajout photo</h2>
+            <form>
+              <div class='form-ajout'>
+                <i class="fa-regular fa-image"></i>
+                <button>+ Ajouter photo</button>
+                <p>jpg.png: 4mo max</p>
+              </div>
+              <div class='form-formulaire'>
+                <label for='titre'>Titre</label>
+                <input type='text' name='titre' class='form-input'></input>
+                <label for='categorie'>Catégorie</label>
+                <select name='categorie' class='form-input'>
+                  <option></option>
+                  <option>Objets</option>
+                  <option>Appartements</option>
+                  <option>Hôtel</option>
+                </select>
+              </div>
+                <button class='modale-form_button'>Valider</button>
+            </form>
+        </div>
+      </div>`;
+    }
+
+
+
+async function affichageGallerieModale(data) {
+  
   const mesProjets = document.querySelector(".mes-projets");
 
   // Ecoute le bouton "modifier" et injecte du HTML au click pour former la modale //
-  btnProjets.addEventListener("click", (e) => {
-    mesProjets.appendChild(divGallerie)
-    divGallerie.innerHTML = `<div class='modale'>
-<i class="fa-solid fa-xmark"></i>
-<h2>Galerie photo</h2>
-<ul class="modale-photos">
-          ${affichageGallerieModale(data)}
-        </ul>
-<button class="modale-button">Ajouter une photo</button>
-
-</div>`;
-
-//Ecoute du bouton qui ferme la modale //
-  const btnFermer = document.querySelector(".fa-xmark");
-  btnFermer.addEventListener("click", (e) => {
-      if (e.target.classList.contains("fa-xmark")) {
-        divGallerie.innerHTML="";
-      }
-    });
-
-
-    const modaleBouton = document.querySelector(".modale-button")
-    modaleBouton.addEventListener("click", (e) => {
-      divGallerie.innerHTML =
-      `<div class='modale'>
-          <i class="fa-solid fa-arrow-left"></i>
-          <i class="fa-solid fa-xmark"></i>
-          <h2>Ajout photo</h2>
-          <form>
-            <div class='form-ajout'>
-              <i class="fa-regular fa-image"></i>
-              <button>+ Ajouter photo</button>
-              <p>jpg.png: 4mo max</p>
-            </div>
-            <div class='form-formulaire'>
-              <label for='titre'>Titre</label>
-              <input type='text' name='titre' class='form-input'></input>
-              <label for='categorie'>Catégorie</label>
-              <select name='categorie' class='form-input'>
-                <option></option>
-                <option>Objets</option>
-                <option>Appartements</option>
-                <option>Hôtel</option>
-              </select>
-            </div>
-              <button class='modale-form_button'>Valider</button>
-          </form>
-      </div>`;
-    })
-  });
-}
-
-function affichageGallerieModale(data) {
-  return data
-    .map(
+  const affichageLi = 
+ data.map(
       (item) => `
-        <li class="modale-photos_all">
-          <i class="fa-solid fa-trash-can"></i>
+        <li class="modale-photos_all" >
+          <i class="fa-solid fa-trash-can" data-id="${item.id}"></i>
           <img src="${item.imageUrl}" alt="${item.title}">
         </li>
       `,
-    )
-    .join("");
-}
+    ).join("")
+
+
+    mesProjets.appendChild(divGallerie);
+    divGallerie.innerHTML = `
+  <div class='overlay'>
+    <div class='modale'>
+      <i class="fa-solid fa-xmark"></i>
+      <h2>Galerie photo</h2>
+      <ul class="modale-photos">
+          ${affichageLi}
+      </ul>
+      <button class="modale-button">Ajouter une photo</button>
+    </div>
+  </div>`;
+  }
+
 
 afficherTravaux();
 selectionDataFiltres();
