@@ -1,6 +1,6 @@
 const portfolioFiltres = document.getElementById("portfolio-filtres");
 const galerie = document.querySelector(".gallery");
-const divGallerie = document.createElement("div");
+const divGallerie = document.querySelector(".div-gallerie");
 
 // Récupère les datas de l'API //
 async function dataTri() {
@@ -113,7 +113,9 @@ function loginActif() {
   iconeProjets.classList.add("fa-solid", "fa-pen-to-square");
   divHead.classList.add("header-admin");
   spanBtn.textContent = "modifier";
-  btnProjets.classList.add(".button-modifier")
+  btnProjets.type = "button";
+  btnProjets.classList.add("btn-modifier");
+
   // Rattacher les enfants aux parents//
   divHead.appendChild(icone);
   divHead.appendChild(spanHead);
@@ -143,118 +145,142 @@ async function modale() {
   // Récupère ma data de l'API //
   const data = await dataTri();
 
+  // Variables du DOM
+  const modaleGallerie = document.querySelector(".modale-view_one");
+  const modaleAjoutPhoto = document.querySelector(".modale-view_two");
+  const formulaire = document.querySelector("#formulaire");
+
   // Ecoute du bouton modifier pour afficher la modale //
-  const btnProjets = document.querySelector("button");
+
+  const btnProjets = document.querySelector(".btn-modifier");
   btnProjets.addEventListener("click", (e) => {
-    affichageGallerieModale(data)
-  })
- 
-   // Ecoute ma gallerie modale, si elle contient ces éléments alors elle affiche modale/Ajout photo//
-    divGallerie.addEventListener("click", (e) => {
-      console.log(e.target)
-      const cible = e.target.classList
-      
-      if (cible.contains("overlay")) {
-        divGallerie.innerHTML = "";
-      }  
-      if (cible.contains("fa-xmark")) {
-        divGallerie.innerHTML = "";
-      }   
-      if(cible.contains("fa-arrow-left")){
-          affichageGallerieModale(data)
-      }
-      if(cible.contains("modale-button")){
-        affichageModaleAjoutPhoto()
-      }
-      if(cible.contains("fa-trash-can")){
+    modaleGallerie.classList.remove("hide");
+    affichageGallerieModale(data);
+  });
 
-        // Supprime les travaux de la modale et de la galerie //
-        const li = e.target.closest(".modale-photos_all")
-        const id = e.target.dataset.id
-        li.remove(id)
-        
-        const galerieItem = document.querySelector(`.gallery li[data-id="${id}"]`)
-        galerieItem.remove()
-      }
-    });
-    
-        affichageModaleAjoutPhoto()
-    
-      }
-    
-    // -----------------------------------  //
-
-
-      
-
-
-
-function affichageModaleAjoutPhoto(){
-      divGallerie.innerHTML = `
-      <div class='overlay'>
-        <div class='modale'>
-            <i class="fa-solid fa-arrow-left"></i>
-            <i class="fa-solid fa-xmark"></i>
-            <h2>Ajout photo</h2>
-            <form>
-              <div class='form-ajout'>
-                <i class="fa-regular fa-image"></i>
-                <button>+ Ajouter photo</button>
-                <p>jpg.png: 4mo max</p>
-              </div>
-              <div class='form-formulaire'>
-                <label for='titre'>Titre</label>
-                <input type='text' name='titre' class='form-input'></input>
-                <label for='categorie'>Catégorie</label>
-                <select name='categorie' class='form-input'>
-                  <option></option>
-                  <option>Objets</option>
-                  <option>Appartements</option>
-                  <option>Hôtel</option>
-                </select>
-              </div>
-                <button class='modale-form_button'>Valider</button>
-            </form>
-        </div>
-      </div>`;
+  // Ecoute ma gallerie modale, si elle contient ces éléments alors elle affiche modale/Ajout photo//
+  divGallerie.addEventListener("click", (e) => {
+    const cible = e.target.classList;
+    if (cible.contains("fa-xmark")) {
+      modaleGallerie.classList.add("hide");
+      modaleAjoutPhoto.classList.add("hide");
+    }
+    if (cible.contains("fa-arrow-left")) {
+      modaleGallerie.classList.remove("hide");
+      modaleAjoutPhoto.classList.add("hide");
+    }
+    if (cible.contains("modale-button")) {
+      modaleGallerie.classList.add("hide");
+      modaleAjoutPhoto.classList.remove("hide");
     }
 
+    if (cible.contains("fa-trash-can")) {
+      // Supprime les travaux de la modale et de la galerie //
+      const li = e.target.closest(".modale-photos_all");
+      const id = e.target.dataset.id;
+      li.remove();
+      const galerieItem = document.querySelector(
+        `.gallery li[data-id="${id}"]`,
+      );
+      galerieItem.remove();
 
+      suppression(id);
+    }
+  });
+}
+
+async function suppression(id) {
+  try {
+    const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (response.status === 200) {
+      console.log("Effacé");
+    } else if (response.status === 401) {
+      console.log("Pas autorisé");
+    } else if (response.status === 500) {
+      console.log("Erreur serveur");
+    }
+  } catch (error) {
+    console.error("Erreur réseau :", error);
+  }
+}
+
+// -----------------------------------  //
+
+function formAjoutPhoto() {
+  const formulaire = document.querySelector("#formulaire");
+  const inputText = document.querySelector("input[type='text']");
+  const selectInput = document.querySelector("select");
+  const inputFile = document.querySelector(".form-ajout_file");
+
+  formulaire.addEventListener("submit", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("coucou");
+    const title = inputText.value;
+    const category = Number(selectInput.value);
+    const image = inputFile.files[0];
+
+    formData(image, title, category);
+  });
+}
 
 async function affichageGallerieModale(data) {
-  
-  const mesProjets = document.querySelector(".mes-projets");
-
+  const modalePhoto = document.querySelector(".modale-photos");
   // Ecoute le bouton "modifier" et injecte du HTML au click pour former la modale //
-  const affichageLi = 
- data.map(
+  const affichageLi = data
+    .map(
       (item) => `
         <li class="modale-photos_all" >
           <i class="fa-solid fa-trash-can" data-id="${item.id}"></i>
           <img src="${item.imageUrl}" alt="${item.title}">
         </li>
       `,
-    ).join("")
+    )
+    .join("");
 
+  modalePhoto.innerHTML = ` ${affichageLi} `;
+}
 
-    mesProjets.appendChild(divGallerie);
-    divGallerie.innerHTML = `
-  <div class='overlay'>
-    <div class='modale'>
-      <i class="fa-solid fa-xmark"></i>
-      <h2>Galerie photo</h2>
-      <ul class="modale-photos">
-          ${affichageLi}
-      </ul>
-      <button class="modale-button">Ajouter une photo</button>
-    </div>
-  </div>`;
-  }
+async function formData(image, title, category) {
+  const token = localStorage.getItem("token");
+  const form = document.getElementById("formulaire");
+  const spanAffichage = document.querySelector(".form-span");
+  console.log(spanAffichage);
+  const formData = new FormData();
 
+  formData.append("image", image);
+  formData.append("title", title);
+  formData.append("category", category);
+
+  const request = new XMLHttpRequest();
+  request.open("POST", "http://localhost:5678/api/works", true);
+
+  request.setRequestHeader("Authorization", `Bearer ${token}`);
+  request.onload = async () => {
+    // Au chargement de la requête, affiche actualise moi ma gallerie en arrière plan //
+    const data = await dataTri();
+    afficherGallerie(data);
+
+    // Si ma requête est accepté alors affiche moi //
+    if (request.status === 201) {
+      spanAffichage.classList.remove("hide");
+    } else {
+      console.log(`Erreur lors de l'envoie ${request.status}`);
+    }
+  };
+
+  request.send(formData);
+}
 
 afficherTravaux();
 selectionDataFiltres();
 triFonctionnelle();
 loginActif();
-
 modale();
+formAjoutPhoto();

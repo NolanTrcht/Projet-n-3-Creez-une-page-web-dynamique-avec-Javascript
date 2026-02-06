@@ -11,10 +11,12 @@
 		rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 	<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Atma:wght@300;400;500;600;700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+		rel="stylesheet">
 </head>
 
 <body>
@@ -24,7 +26,9 @@
 			<ul>
 				<li>projets</li>
 				<li>contact</li>
-				<a href="login.html"><li class="nav-login">login</li></a>
+				<a href="login.html">
+					<li class="nav-login">login</li>
+				</a>
 				<li><img src="./assets/icons/instagram.png" alt="Instagram" class="insta-logo"></li>
 			</ul>
 		</nav>
@@ -48,6 +52,49 @@
 		<section id="portfolio">
 			<h2 class="mes-projets">Mes projets</h2>
 			<ul id="portfolio-filtres"></ul>
+
+			<div class="div-gallerie">
+				<div class='modale-view_one hide'>
+					<i class="fa-solid fa-xmark"></i>
+					<h2>Galerie photo</h2>
+					<ul class="modale-photos">
+
+					</ul>
+					<button type="button" class="modale-button">Ajouter une photo</button>
+				</div>
+
+				<div class='modale-view_two hide'>
+					<div class="modale-two_icon">
+						<i class="fa-solid fa-arrow-left"></i>
+						<i class="fa-solid fa-xmark"></i>
+					</div>
+					<h2>Ajout photo</h2>
+					<form id='formulaire'>
+						<div class='form-ajout'>
+							<i class="fa-regular fa-image"></i>
+							<input type='file' name='image' class='form-ajout_file' />
+							<button type="button" class='form-ajout_button'>+ Ajouter photo</button>
+							<p>jpg.png: 4mo max</p>
+						</div>
+
+						<div class='form-formulaire'>
+							<label for='title'>Titre</label>
+							<input type='text' name='title' class='form-input'></input>
+							<label for='category'>Catégorie</label>
+							<select name='category' class='form-input'>
+								<option value=""></option>
+								<option value="1">Objets</option>
+								<option value="2">Appartements</option>
+								<option value="3">Hôtel</option>
+							</select>
+							<span class="form-span hide"><i class="fa-solid fa-check"></i> Fichier ajouté !</span>
+						</div>
+						<button type='submit' class='modale-form_button'>Valider</button>
+					</form>
+				</div>
+			</div>
+
+
 			<div class="gallery">
 
 
