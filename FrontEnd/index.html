@@ -54,46 +54,44 @@
 			<ul id="portfolio-filtres"></ul>
 
 			<div class="div-gallerie">
-				<div class='modale-view_one hide'>
-					<i class="fa-solid fa-xmark"></i>
-					<h2>Galerie photo</h2>
-					<ul class="modale-photos">
-
-					</ul>
-					<button type="button" class="modale-button">Ajouter une photo</button>
-				</div>
-
-				<div class='modale-view_two hide'>
-					<div class="modale-two_icon">
-						<i class="fa-solid fa-arrow-left"></i>
+				<div class="overlay hide">
+					<div class='modale-view_one hide'>
 						<i class="fa-solid fa-xmark"></i>
-					</div>
-					<h2>Ajout photo</h2>
-					<form id='formulaire'>
-						<div class='form-ajout'>
-							<i class="fa-regular fa-image"></i>
-							<input type='file' name='image' class='form-ajout_file' />
-							<button type="button" class='form-ajout_button'>+ Ajouter photo</button>
-							<p>jpg.png: 4mo max</p>
-						</div>
+						<h2>Galerie photo</h2>
+						<ul class="modale-photos">
 
-						<div class='form-formulaire'>
-							<label for='title'>Titre</label>
-							<input type='text' name='title' class='form-input'></input>
-							<label for='category'>Catégorie</label>
-							<select name='category' class='form-input'>
-								<option value=""></option>
-								<option value="1">Objets</option>
-								<option value="2">Appartements</option>
-								<option value="3">Hôtel</option>
-							</select>
-							<span class="form-span hide"><i class="fa-solid fa-check"></i> Fichier ajouté !</span>
+						</ul>
+						<button type="button" class="modale-button">Ajouter une photo</button>
+					</div>
+
+					<div class='modale-view_two hide'>
+						<div class="modale-two_icon">
+							<i class="fa-solid fa-arrow-left"></i>
+							<i class="fa-solid fa-xmark"></i>
 						</div>
-						<button type='submit' class='modale-form_button'>Valider</button>
-					</form>
+						<h2>Ajout photo</h2>
+						<form id='formulaire' method="post" enctype="multipart/form-data">
+							<div class='form-ajout'>
+								<i class="fa-regular fa-image"></i>
+								<input type='file' name='image' class='form-ajout_file' />
+								<button type="button" class='form-ajout_button'>+ Ajouter photo</button>
+								<p>jpg.png: 4mo max</p>
+							</div>
+
+							<div class='form-formulaire'>
+								<label for='title'>Titre</label>
+								<input type='text' name='title' class='form-input'></input>
+								<label for='category'>Catégorie</label>
+								<select name='category' class='form-input'>
+									<option></option>
+								</select>
+								<span class="form-span hide"><i class="fa-solid fa-check"></i> Fichier ajouté !</span>
+							</div>
+							<button type='submit' class='modale-form_button'>Valider</button>
+						</form>
+					</div>
 				</div>
 			</div>
-
 
 			<div class="gallery">
 

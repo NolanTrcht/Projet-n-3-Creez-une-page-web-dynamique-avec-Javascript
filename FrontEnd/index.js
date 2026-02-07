@@ -148,12 +148,13 @@ async function modale() {
   // Variables du DOM
   const modaleGallerie = document.querySelector(".modale-view_one");
   const modaleAjoutPhoto = document.querySelector(".modale-view_two");
-  const formulaire = document.querySelector("#formulaire");
+  const overlay = document.querySelector(".overlay.hide");
 
   // Ecoute du bouton modifier pour afficher la modale //
 
   const btnProjets = document.querySelector(".btn-modifier");
   btnProjets.addEventListener("click", (e) => {
+    overlay.classList.remove("hide");
     modaleGallerie.classList.remove("hide");
     affichageGallerieModale(data);
   });
@@ -161,6 +162,8 @@ async function modale() {
   // Ecoute ma gallerie modale, si elle contient ces éléments alors elle affiche modale/Ajout photo//
   divGallerie.addEventListener("click", (e) => {
     const cible = e.target.classList;
+    console.log(cible);
+
     if (cible.contains("fa-xmark")) {
       modaleGallerie.classList.add("hide");
       modaleAjoutPhoto.classList.add("hide");
@@ -212,23 +215,88 @@ async function suppression(id) {
 
 // -----------------------------------  //
 
-function formAjoutPhoto() {
+async function formAjoutPhoto() {
   const formulaire = document.querySelector("#formulaire");
   const inputText = document.querySelector("input[type='text']");
   const selectInput = document.querySelector("select");
+  const formAjout = document.querySelector(".form-ajout");
   const inputFile = document.querySelector(".form-ajout_file");
+  const spanMessage = document.querySelector(".form-span");
+
+  const category = await formCategory();
+
+  category.forEach((categorie) => {
+    const option = document.createElement("option");
+    option.value = categorie.id;
+    option.textContent = categorie.name;
+    selectInput.appendChild(option);
+  });
+
+  inputFile.addEventListener("change", () => {
+    const file = inputFile.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      let previewImg = document.createElement("img");
+      previewImg.classList.add("preview-img");
+      previewImg.src = e.target.result;
+      formAjout.appendChild(previewImg);
+    };
+    reader.readAsDataURL(file);
+    formAjout.classList.add("preview");
+  });
 
   formulaire.addEventListener("submit", (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("coucou");
+
     const title = inputText.value;
     const category = Number(selectInput.value);
     const image = inputFile.files[0];
 
-    formData(image, title, category);
+    if (!title || !category || !image) {
+      alert("Veuillez remplir les champs !");
+      formAjout.classList.remove();
+      spanMessage.classList.add("hide");
+    } else if (title && category && image) {
+      spanMessage.classList.remove("hide");
+      setTimeout(() => {
+        spanMessage.classList.add("hide");
+      }, 3000);
+    }
+
+    formData(image, title, category).then(() => {
+      formulaire.reset();
+
+      const previewImg = formAjout.querySelector(".preview-img");
+      if (previewImg) {
+        previewImg.remove();
+        formAjout.classList.remove("preview");
+      }
+    });
   });
 }
+
+async function formCategory() {
+  const reponse = await fetch("http://localhost:5678/api/categories", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+  if (reponse.status === 200) {
+    // console.log("C'est good");
+  } else if (reponse.status === 500) {
+    console.log("Erreur serveur");
+  } else if (error) {
+    console.error("Erreur réseau :", error);
+  }
+
+  const category = await reponse.json();
+  return category;
+}
+formCategory();
 
 async function affichageGallerieModale(data) {
   const modalePhoto = document.querySelector(".modale-photos");
@@ -249,9 +317,6 @@ async function affichageGallerieModale(data) {
 
 async function formData(image, title, category) {
   const token = localStorage.getItem("token");
-  const form = document.getElementById("formulaire");
-  const spanAffichage = document.querySelector(".form-span");
-  console.log(spanAffichage);
   const formData = new FormData();
 
   formData.append("image", image);
@@ -269,7 +334,6 @@ async function formData(image, title, category) {
 
     // Si ma requête est accepté alors affiche moi //
     if (request.status === 201) {
-      spanAffichage.classList.remove("hide");
     } else {
       console.log(`Erreur lors de l'envoie ${request.status}`);
     }
