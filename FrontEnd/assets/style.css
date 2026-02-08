@@ -191,6 +191,7 @@ h2 {
 nav ul {
   display: flex;
   align-items: center;
+  justify-items: center;
   list-style-type: none;
 }
 nav li {
@@ -199,7 +200,7 @@ nav li {
   cursor: pointer;
 }
 .insta-logo {
-  width: 20px;
+  width: 15px;
 }
 nav a {
   color: inherit;
@@ -258,13 +259,15 @@ li:hover {
 }
 
 .overlay {
-  display: block;
-  position: absolute;
-  left: 0%;
-  top: 0%;
-  z-index: 2;
-  width: 100%;
-  height: 3500px;
+  position: fixed;
+  /* Raccourci pour le positionnement top right ..., indique que l'élément prend tout l'écran */
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10vh;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1000;
 }
 
 .modale-view_one,
@@ -272,9 +275,9 @@ li:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
-  top: 15%;
-  left: 20%;
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
   width: 70%;
   height: auto;
   background-color: white;
@@ -293,7 +296,6 @@ li:hover {
 .modale-photos {
   display: flex;
   flex-wrap: wrap;
-  justify-self: center;
   justify-content: flex-start;
   margin: 40px 0;
   gap: 9px;
@@ -311,8 +313,8 @@ li:hover {
 }
 
 .modale-photos li img {
-  position: relative;
-  top: -30%;
+  object-position: center;
+  transform: translateY(-30%);
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -322,7 +324,7 @@ li:hover {
   z-index: 1;
   top: -5%;
   left: 65%;
-  background-attachment: cover;
+  background-size: cover;
   align-content: center;
   text-align: center;
   font-size: 10px;
@@ -340,7 +342,6 @@ li:hover {
   font-size: 25px;
   margin-top: 20px;
   color: black;
-  text-align: flex-end;
 }
 
 .modale-view_one button,
@@ -468,9 +469,19 @@ li:hover {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
   outline: none;
 }
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20640%20640'%3E%3Cpath%20fill='%23000'%20d='M297.4%20470.6C309.9%20483.1%20330.2%20483.1%20342.7%20470.6L534.7%20278.6C547.2%20266.1%20547.2%20245.8%20534.7%20233.3C522.2%20220.8%20501.9%20220.8%20489.4%20233.3L320%20402.7L150.6%20233.4C138.1%20220.9%20117.8%20220.9%20105.3%20233.4C92.8%20245.9%2092.8%20266.2%20105.3%20278.7L297.3%20470.7z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  cursor: pointer;
+}
+
 .form-span.hide {
   visibility: hidden;
 }
+
 .form-span {
   width: 100%;
   height: 20px;
@@ -483,6 +494,12 @@ li:hover {
 
 .modale-view_two form .modale-form_button {
   background-color: rgba(167, 167, 167, 1);
+  font-family: "Syne";
+  font-size: 12px;
+}
+
+.modale-view_two form .modale-form_button.preview {
+  background-color: rgba(29, 97, 84, 1);
   font-family: "Syne";
   font-size: 12px;
 }

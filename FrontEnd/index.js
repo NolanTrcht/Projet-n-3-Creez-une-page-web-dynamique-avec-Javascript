@@ -48,7 +48,7 @@ async function selectionDataFiltres() {
 
 function afficherGallerie(tableau) {
   // vide ma gallerie avant chaque actualisation//
-  galerie.innerHTML = ``;
+  galerie.innerHTML = "";
 
   // Pour chaque tableau transmis en paramètres, affiche moi ceci//
   tableau.forEach((item) => {
@@ -72,7 +72,6 @@ async function triFonctionnelle() {
   portfolioFiltres.addEventListener("click", (e) => {
     // récupère le data-category de mes <li> //
     const cible = e.target.dataset.category;
-    console.log(cible);
     // Distingue les 4 catégories différentes pour l'affichage//
     switch (cible) {
       case "0":
@@ -142,9 +141,6 @@ function loginActif() {
 }
 
 async function modale() {
-  // Récupère ma data de l'API //
-  const data = await dataTri();
-
   // Variables du DOM
   const modaleGallerie = document.querySelector(".modale-view_one");
   const modaleAjoutPhoto = document.querySelector(".modale-view_two");
@@ -153,7 +149,10 @@ async function modale() {
   // Ecoute du bouton modifier pour afficher la modale //
 
   const btnProjets = document.querySelector(".btn-modifier");
-  btnProjets.addEventListener("click", (e) => {
+  btnProjets.addEventListener("click", async () => {
+    // Récupère mes datas une fois réactualiser //
+    const data = await dataTri();
+
     overlay.classList.remove("hide");
     modaleGallerie.classList.remove("hide");
     affichageGallerieModale(data);
@@ -167,16 +166,21 @@ async function modale() {
     if (cible.contains("fa-xmark")) {
       modaleGallerie.classList.add("hide");
       modaleAjoutPhoto.classList.add("hide");
+      overlay.classList.add("hide");
     }
     if (cible.contains("fa-arrow-left")) {
       modaleGallerie.classList.remove("hide");
       modaleAjoutPhoto.classList.add("hide");
     }
+    if (cible.contains("overlay")) {
+      modaleGallerie.classList.add("hide");
+      modaleAjoutPhoto.classList.add("hide");
+      overlay.classList.add("hide");
+    }
     if (cible.contains("modale-button")) {
       modaleGallerie.classList.add("hide");
       modaleAjoutPhoto.classList.remove("hide");
     }
-
     if (cible.contains("fa-trash-can")) {
       // Supprime les travaux de la modale et de la galerie //
       const li = e.target.closest(".modale-photos_all");
@@ -201,11 +205,7 @@ async function suppression(id) {
       },
     });
 
-    if (response.status === 200) {
-      console.log("Effacé");
-    } else if (response.status === 401) {
-      console.log("Pas autorisé");
-    } else if (response.status === 500) {
+    if (response.status === 500) {
       console.log("Erreur serveur");
     }
   } catch (error) {
@@ -222,6 +222,7 @@ async function formAjoutPhoto() {
   const formAjout = document.querySelector(".form-ajout");
   const inputFile = document.querySelector(".form-ajout_file");
   const spanMessage = document.querySelector(".form-span");
+  const buttonForm = document.querySelector(".modale-form_button");
 
   const category = await formCategory();
 
@@ -247,9 +248,18 @@ async function formAjoutPhoto() {
     formAjout.classList.add("preview");
   });
 
+  formulaire.addEventListener("click", (e) => {
+    const title = inputText.value;
+    const category = Number(selectInput.value);
+    const image = inputFile.files[0];
+
+    if (title && category && image) {
+      buttonForm.classList.add("preview");
+    }
+  });
+
   formulaire.addEventListener("submit", (e) => {
     e.preventDefault();
-    e.stopPropagation();
 
     const title = inputText.value;
     const category = Number(selectInput.value);
@@ -273,6 +283,7 @@ async function formAjoutPhoto() {
       if (previewImg) {
         previewImg.remove();
         formAjout.classList.remove("preview");
+        buttonForm.classList.remove("preview");
       }
     });
   });
@@ -289,14 +300,11 @@ async function formCategory() {
     // console.log("C'est good");
   } else if (reponse.status === 500) {
     console.log("Erreur serveur");
-  } else if (error) {
-    console.error("Erreur réseau :", error);
   }
 
   const category = await reponse.json();
   return category;
 }
-formCategory();
 
 async function affichageGallerieModale(data) {
   const modalePhoto = document.querySelector(".modale-photos");
@@ -331,10 +339,10 @@ async function formData(image, title, category) {
     // Au chargement de la requête, affiche actualise moi ma gallerie en arrière plan //
     const data = await dataTri();
     afficherGallerie(data);
+    affichageGallerieModale(data);
 
     // Si ma requête est accepté alors affiche moi //
-    if (request.status === 201) {
-    } else {
+    if (request.status === 500) {
       console.log(`Erreur lors de l'envoie ${request.status}`);
     }
   };

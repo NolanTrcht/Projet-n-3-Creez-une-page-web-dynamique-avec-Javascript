@@ -3,7 +3,6 @@ function login() {
   const title = document.querySelector(".form-title");
 
   formulaire.addEventListener("submit", (e) => {
-    // Bloque le rechargement automatique de la page//
     e.preventDefault();
 
     //Construction de la charge Utile pour l'envoie des données//
@@ -32,7 +31,6 @@ function login() {
           title.innerHTML = `<h2>Log In</h2><p>Erreur dans l'identifiant ou le mot de passe</p>`;
         }
       });
-    //   .catch((erreur) => console.log(erreur));
   });
 }
 login();
